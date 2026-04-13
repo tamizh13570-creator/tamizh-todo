@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title> Tamizh Todo  Daily Planner</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!--  INTRO SCREEN  -->
+  <div id="intro-screen">
+    <div class="intro-particles" id="introParticles"></div>
+    <div class="intro-ring-wrap">
+      <div class="intro-ring" style="animation-delay:0.5s"></div>
+      <div class="intro-ring" style="animation-delay:1s; border-color:rgba(255,106,155,0.2);"></div>
+      <div class="intro-ring" style="animation-delay:1.5s; border-color:rgba(106,255,184,0.15);"></div>
+    </div>
+    <div class="intro-logo-wrap">
+      <div class="intro-logo-bg"></div>
+      <div class="intro-title">
+        <span class="t1">TAMIZH</span>
+        <span class="t2">TODO </span>
+      </div>
+      <div class="intro-tagline">Your Daily Companion</div>
+      <div class="intro-dots">
+        <div class="intro-dot"></div>
+        <div class="intro-dot"></div>
+        <div class="intro-dot"></div>
+        <div class="intro-dot"></div>
+        <div class="intro-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!--  FLOATING PARTICLES (BG)  -->
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="confetti-container" id="confettiContainer"></div>
+
+  <!--  NOTIFICATION POPUP  -->
+  <div class="notif-popup" id="notifPopup">
+    <div class="notif-header">
+      <span class="notif-title"> Motivation Boost</span>
+      <button class="notif-close" onclick="closeNotif()"></button>
+    </div>
+    <p class="notif-msg" id="notifMsg">You've got this! </p>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="logo">Tamizh<span></span>Todo</div>
+      <div class="header-right">
+        <div class="date-display">
+          <strong id="dateDisplay"></strong>
+          <span id="timeDisplay"></span>
+        </div>
+        <!-- User avatar button + profile dropdown -->
+        <div class="profile-dropdown-wrap" id="profileDropdownWrap" style="position:relative;">
+          <button class="notif-btn" id="userAccountBtn" onclick="toggleProfileDropdown()" title="Account Login" style="margin-right:0;">
+            &#x1F464;
+          </button>
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="pd-avatar" id="pdAvatar">&#x1F464;</div>
+            <div class="pd-username" id="pdUsername">User<span>Tamizh Todo Member</span></div>
+            <div class="pd-stats">
+              <div class="pd-stat">
+                <div class="pd-stat-num" id="pdTasksToday">0</div>
+                <div class="pd-stat-label">Today</div>
+              </div>
+              <div class="pd-stat">
+                <div class="pd-stat-num" id="pdDoneToday" style="color:var(--accent3)">0</div>
+                <div class="pd-stat-label">Done</div>
+              </div>
+              <div class="pd-stat">
+                <div class="pd-stat-num" id="pdStreakPd" style="color:var(--accent2)">0</div>
+                <div class="pd-stat-label">Streak</div>
+              </div>
+              <div class="pd-stat">
+                <div class="pd-stat-num" id="pdLifetime" style="color:var(--accent4)">0</div>
+                <div class="pd-stat-label">Lifetime</div>
+              </div>
+            </div>
+            <div class="pd-divider"></div>
+            <button class="pd-btn" onclick="showAvatarPicker(false); document.getElementById('profileDropdown').classList.remove('open');">
+              <span class="pd-btn-icon">&#x1F3AD;</span> Change Avatar
+            </button>
+            <button class="pd-btn pd-logout" onclick="submitLogout()">
+              <span class="pd-btn-icon">&#x1F6AA;</span> Log Out
+            </button>
+          </div>
+        </div>
+        <button class="notif-btn" onclick="showMotivation()" title="Motivation boost">
+          &#x1F514;<div class="notif-dot"></div>
+        </button>
+      </div>
+    </header>
+
+    <div class="motivation-banner">
+      <div class="motivation-icon"></div>
+      <div class="motivation-text" id="motivationBanner">Loading your daily quote...</div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-label">Today's Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statDone">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statStreak">0</div>
+        <div class="stat-label">Day Streak </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statRate">0%</div>
+        <div class="stat-label">Success Rate</div>
+      </div>
+    </div>
+
+    <!-- MAIN TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tasks',this)">&#x1F4CB; Daily</button>
+      <button class="tab" onclick="switchTab('monthly',this)">&#x1F4C5; Monthly</button>
+      <button class="tab" onclick="switchTab('yearly',this)">&#x1F5D3; Yearly</button>
+      <button class="tab" onclick="switchTab('samples',this)">&#x1F4CC; Samples</button>
+      <button class="tab" onclick="switchTab('graph',this)">&#x1F4CA; Graph</button>
+      <button class="tab" onclick="switchTab('data',this)">&#x1F5C2; All Data</button>
+      <button class="tab" onclick="switchTab('year',this)">&#x1F30D; Year View</button>
+    </div>
+
+    <!--  DAILY TASKS  -->
+    <div class="section active" id="section-tasks">
+      <div class="countdown-bar">
+        <span class="countdown-label">&#x23F3; Daily tasks auto-delete at midnight</span>
+        <span class="countdown-time" id="countdownTime"></span>
+      </div>
+      <div class="input-area">
+        <label class="input-label">&#x1F4DD; Add Daily Task</label>
+        <div class="input-row">
+          <div class="input-group">
+            <input class="task-input" id="taskInput" type="text" placeholder="What do you need to accomplish today?"
+              maxlength="200">
+          </div>
+          <select class="priority-select" id="prioritySelect">
+            <option value="medium">&#x1F7E1; Medium</option>
+            <option value="high">&#x1F534; High</option>
+            <option value="low">&#x1F7E2; Low</option>
+          </select>
+          <button class="add-btn" onclick="addTask('daily')">+ Add</button>
+        </div>
+        <div class="reminder-section">
+          <span style="font-size:0.8rem;color:var(--muted)">&#x1F514; Reminder:</span>
+          <button class="reminder-btn" id="reminderBtn" onclick="requestReminder()">Enable Desktop
+            Notifications</button>
+          <span id="reminderStatus" style="font-size:0.75rem;color:var(--muted)"></span>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-header"><strong>Today's Progress</strong><span id="progressLabel">0 / 0 tasks</span></div>
+        <div class="progress-track">
+          <div class="progress-fill daily" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="tabs" style="margin-bottom:14px;">
+        <button class="tab active" onclick="filterTasks('all',this,'daily')">All</button>
+        <button class="tab" onclick="filterTasks('active',this,'daily')">Active</button>
+        <button class="tab" onclick="filterTasks('done',this,'daily')">Done</button>
+      </div>
+      <div class="todo-list" id="todoList"></div>
+    </div>
+
+    <!--  MONTHLY TASKS  -->
+    <div class="section" id="section-monthly">
+      <div class="period-header">
+        <div>
+          <div class="period-title">&#x1F4C5; Monthly Goals</div>
+          <div class="period-meta" id="monthlyMeta"></div>
+        </div>
+        <span class="period-badge pb-monthly">Auto-deletes end of month</span>
+      </div>
+      <div class="input-area">
+        <label class="input-label">Add Monthly Goal</label>
+        <div class="input-row">
+          <div class="input-group">
+            <input class="task-input" id="monthlyInput" type="text"
+              placeholder="What do you want to achieve this month?" maxlength="200">
+          </div>
+          <select class="priority-select" id="monthlyPriority">
+            <option value="medium">&#x1F7E1; Medium</option>
+            <option value="high">&#x1F534; High</option>
+            <option value="low">&#x1F7E2; Low</option>
+          </select>
+          <button class="add-btn" onclick="addTask('monthly')">+ Add</button>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-header"><strong>Monthly Progress</strong><span id="monthlyProgressLabel">0 / 0 goals</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill monthly" id="monthlyProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="tabs" style="margin-bottom:14px;">
+        <button class="tab active" onclick="filterTasks('all',this,'monthly')">All</button>
+        <button class="tab" onclick="filterTasks('active',this,'monthly')">Active</button>
+        <button class="tab" onclick="filterTasks('done',this,'monthly')">Done</button>
+      </div>
+      <div class="todo-list" id="monthlyList"></div>
+    </div>
+
+    <!--  YEARLY TASKS  -->
+    <div class="section" id="section-yearly">
+      <div class="period-header">
+        <div>
+          <div class="period-title">&#x1F5D3; Yearly Aspirations</div>
+          <div class="period-meta" id="yearlyMeta"></div>
+        </div>
+        <span class="period-badge pb-yearly">Auto-deletes end of year</span>
+      </div>
+      <div class="input-area">
+        <label class="input-label">Add Yearly Goal</label>
+        <div class="input-row">
+          <div class="input-group">
+            <input class="task-input" id="yearlyInput" type="text" placeholder="What will you accomplish this year?"
+              maxlength="200">
+          </div>
+          <select class="priority-select" id="yearlyPriority">
+            <option value="medium">&#x1F7E1; Medium</option>
+            <option value="high">&#x1F534; High</option>
+            <option value="low">&#x1F7E2; Low</option>
+          </select>
+          <button class="add-btn" onclick="addTask('yearly')">+ Add</button>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-header"><strong>Yearly Progress</strong><span id="yearlyProgressLabel">0 / 0
+            aspirations</span></div>
+        <div class="progress-track">
+          <div class="progress-fill yearly" id="yearlyProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="tabs" style="margin-bottom:14px;">
+        <button class="tab active" onclick="filterTasks('all',this,'yearly')">All</button>
+        <button class="tab" onclick="filterTasks('active',this,'yearly')">Active</button>
+        <button class="tab" onclick="filterTasks('done',this,'yearly')">Done</button>
+      </div>
+      <div class="todo-list" id="yearlyList"></div>
+    </div>
+
+    <!--  SAMPLE TASKS  -->
+    <div class="section" id="section-samples">
+      <div class="period-header">
+        <div>
+          <div class="period-title">&#x1F4CC; Sample Templates</div>
+          <div class="period-meta">Ready-to-use task templates  delete anytime</div>
+        </div>
+        <button onclick="resetSamples()"
+          style="background:rgba(255,106,155,0.15);border:1px solid rgba(255,106,155,0.3);color:var(--accent2);border-radius:10px;padding:6px 14px;font-size:0.78rem;cursor:pointer;">&#x1F504; Reset Samples</button>
+      </div>
+      <div style="margin-bottom:16px;font-size:0.82rem;color:var(--muted);">
+         Click any sample to add it to your Daily tasks. Delete samples manually  they never auto-delete.
+      </div>
+      <div class="todo-list" id="sampleList"></div>
+    </div>
+
+    <!--  GRAPH  -->
+    <div class="section" id="section-graph">
+      <div class="chart-card">
+        <div class="chart-title">&#x1F4CA; Weekly Completion</div>
+        <div class="chart-subtitle">Tasks added vs completed over the past 7 days</div>
+        <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">&#x1F3AF; Priority Breakdown</div>
+        <div class="chart-subtitle">How your tasks are distributed by priority</div>
+        <div class="chart-wrap" style="height:200px;"><canvas id="priorityChart"></canvas></div>
+      </div>
+    </div>
+
+    <!--  DATA  -->
+    <div class="section" id="section-data">
+      <div class="section-header">All Data <span class="section-badge">Lifetime</span></div>
+      <div class="data-grid">
+        <div class="data-card" data-icon="">
+          <div class="data-card-label">Total Tasks Created</div>
+          <div class="data-card-value" id="dataTotal" style="color:var(--accent)">0</div>
+          <div class="data-card-sub">Since you started</div>
+        </div>
+        <div class="data-card" data-icon="">
+          <div class="data-card-label">Total Completed</div>
+          <div class="data-card-value" id="dataCompleted" style="color:var(--accent3)">0</div>
+          <div class="data-card-sub">Lifetime count</div>
+        </div>
+        <div class="data-card" data-icon="">
+          <div class="data-card-label">Best Streak</div>
+          <div class="data-card-value" id="dataBestStreak" style="color:var(--accent4)">0</div>
+          <div class="data-card-sub">Consecutive active days</div>
+        </div>
+        <div class="data-card" data-icon="">
+          <div class="data-card-label">Active Days</div>
+          <div class="data-card-value" id="dataActiveDays" style="color:var(--accent2)">0</div>
+          <div class="data-card-sub">Days with tasks</div>
+        </div>
+      </div>
+
+
+      <!-- Most Frequent Tasks Toggle Button -->
+      <div style="margin: 16px 0 10px;">
+        <button id="freqToggleBtn" onclick="toggleFreqPanel()"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(124,106,255,0.15), rgba(255,106,155,0.1));
+            border: 1px solid rgba(124,106,255,0.35);
+            border-radius: 14px;
+            padding: 14px 20px;
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+          ">
+          <span style="font-size:1.2rem"></span>
+          <span style="flex:1">Most Frequent Tasks</span>
+          <span style="
+            background: rgba(124,106,255,0.2);
+            color: var(--accent);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(124,106,255,0.3);
+          ">From History</span>
+          <span id="freqToggleArrow" style="font-size:0.9rem;color:var(--muted);margin-left:8px;transition:transform 0.3s"></span>
+        </button>
+      </div>
+      <div id="frequentTasksList" style="display:none"><div class="empty-state"><div class="empty-icon"></div><p>No history data yet.</p></div></div>
+
+      <div class="section-header" style="font-size:0.95rem;margin-bottom:12px;margin-top:8px;"> Daily History</div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+
+    <!--  YEAR VIEW  -->
+    <div class="section" id="section-year">
+      <div class="section-header">Year Overview <span class="section-badge" id="yearBadge">2026</span></div>
+      <div class="chart-card" style="margin-bottom:16px;">
+        <div class="chart-title"> Monthly Performance</div>
+        <div class="chart-subtitle">Completion rate by month</div>
+        <div class="chart-wrap"><canvas id="yearChart"></canvas></div>
+      </div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>No tasks
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(106,255,184,0.4)"></div>Low activity
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:rgba(106,255,184,0.8)"></div>High activity
+        </div>
+      </div>
+      <div class="section-header" style="font-size:0.9rem;margin-bottom:10px;"> Activity Heatmap</div>
+      <div class="year-grid" id="yearGrid"></div>
+    </div>
+
+    <div style="height:40px;"></div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <p>&copy; 2026 Tamizh Todo. All rights reserved.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+
+  <!--  CHATBOT UI  -->
+  <button class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot()" title="AI Assistant"><img src="optimus.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></button>
+
+  <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chat-header">
+      <div class="chat-avatar"><img src="optimus.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></div>
+      <div class="chat-header-info">
+        <div class="chat-header-name">Todo AI Assistant</div>
+        <div class="chat-header-status"><div class="chat-status-dot"></div> Online  Knows your data</div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChatbot()"></button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+
+    <div class="chat-chips">
+      <button class="chat-chip" onclick="sendChatChip('Today\'s tasks')"> Today</button>
+      <button class="chat-chip" onclick="sendChatChip('My streak')"> Streak</button>
+      <button class="chat-chip" onclick="sendChatChip('Tips to improve')"> Improve</button>
+      <button class="chat-chip" onclick="sendChatChip('Most frequent tasks')"> Habits</button>
+      <button class="chat-chip" onclick="sendChatChip('My stats')"> Stats</button>
+      <button class="chat-chip" onclick="sendChatChip('Pending tasks')"> Pending</button>
+    </div>
+
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Ask me anything about your tasks" maxlength="200"
+        onkeydown="if(event.key==='Enter') sendChat()">
+      <button class="chat-send-btn" onclick="sendChat()"></button>
+    </div>
+  </div>
+
+  <!--  AUTH MODAL  -->
+  <div class="auth-modal-overlay" id="authModalOverlay">
+    <div class="auth-modal" id="authModal">
+      <div class="auth-header">
+        <h2 id="authTitle">Welcome Back</h2>
+        <button class="auth-close" id="authCloseBtn" onclick="toggleAuthModal()" title="Close">&#x2716;</button>
+      </div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="loginForm" onsubmit="submitLogin(event)" autocomplete="on">
+        <p class="auth-sub">Log in to sync your tasks across all devices.</p>
+        <input type="text" id="loginUsername" name="username" class="auth-input" placeholder="Username" autocomplete="username" required minlength="3">
+        <div class="auth-pw-wrap">
+          <input type="password" id="loginPassword" name="password" class="auth-input" placeholder="Password" autocomplete="current-password" required minlength="6">
+          <button type="button" class="pw-toggle" onclick="togglePw('loginPassword',this)" title="Show password">&#x1F441;&#xFE0F;</button>
+        </div>
+        <button type="submit" class="auth-submit">&#x1F511; Log In</button>
+        <div class="auth-switch">Don't have an account? <span onclick="switchAuthView('register')">Sign up</span></div>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="registerForm" style="display:none;" onsubmit="submitRegister(event)" autocomplete="on">
+        <p class="auth-sub">Create an account  your data stays safe across all devices.</p>
+        <input type="text" id="regUsername" name="username" class="auth-input" placeholder="Choose a Username (min 3 chars)" autocomplete="username" required minlength="3">
+        <div class="auth-pw-wrap">
+          <input type="password" id="regPassword" name="password" class="auth-input" placeholder="Create Password (min 6 chars)" autocomplete="new-password" required minlength="6">
+          <button type="button" class="pw-toggle" onclick="togglePw('regPassword',this)" title="Show password">&#x1F441;&#xFE0F;</button>
+        </div>
+        <button type="submit" class="auth-submit">&#x1F680; Create Account</button>
+        <div class="auth-switch">Already have an account? <span onclick="switchAuthView('login')">Log in</span></div>
+      </form>
+
+      <!-- Logged In / Profile View -->
+      <div class="auth-form" id="profileForm" style="display:none;">
+        <div class="profile-avatar"></div>
+        <p class="auth-sub" style="margin-top:0;">Logged in as:</p>
+        <h3 id="profileUsername" style="margin: 0 0 8px; color: var(--text); word-break:break-all; font-size:1.3rem;"></h3>
+        <p style="font-size:0.8rem;color:var(--accent3);margin:0 0 20px;"> Your data syncs automatically across all devices</p>
+        <button class="auth-submit" style="background: rgba(255,106,155,0.15); border-color: rgba(255,106,155,0.3); color: var(--accent2);" onclick="submitLogout()"> Log Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVATAR PICKER OVERLAY -->
+  <div class="avatar-picker-overlay" id="avatarPickerOverlay">
+    <div class="avatar-picker-card">
+      <div class="avatar-picker-title">&#x2728; Choose Your Character</div>
+      <div class="avatar-picker-sub">Pick an anime spirit that represents you!</div>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <div class="avatar-picker-actions">
+        <button class="avatar-confirm-btn" onclick="confirmAvatar()">&#x2705; Set My Character</button>
+        <button class="avatar-skip-btn" id="avatarSkipBtn" onclick="skipAvatar()">Skip</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
+
+
