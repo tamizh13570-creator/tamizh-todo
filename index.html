@@ -51,7 +51,7 @@
   <div class="notif-popup" id="notifPopup">
     <div class="notif-header">
       <span class="notif-title"> Motivation Boost</span>
-      <button class="notif-close" onclick="closeNotif()"></button>
+      <button class="notif-close" onclick="closeNotif()">❌</button>
     </div>
     <p class="notif-msg" id="notifMsg">You've got this! </p>
   </div>
@@ -168,11 +168,11 @@
             <option value="high">&#x1F534; High</option>
             <option value="low">&#x1F7E2; Low</option>
           </select>
-          <button class="add-btn" onclick="addTask('daily')">+ Add</button>
+          <button class="add-btn" onclick="addTask('daily')">➕ Add</button>
         </div>
         <div class="reminder-section">
           <span style="font-size:0.8rem;color:var(--muted)">&#x1F514; Reminder:</span>
-          <button class="reminder-btn" id="reminderBtn" onclick="requestReminder()">Enable Desktop
+          <button class="reminder-btn" id="reminderBtn" onclick="requestReminder()">🔔 Enable Desktop
             Notifications</button>
           <span id="reminderStatus" style="font-size:0.75rem;color:var(--muted)"></span>
         </div>
@@ -185,9 +185,9 @@
       </div>
       <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
         <div class="tabs" style="margin-bottom:0;">
-          <button class="tab active" onclick="filterTasks('all',this,'daily')">All</button>
-          <button class="tab" onclick="filterTasks('active',this,'daily')">Active</button>
-          <button class="tab" onclick="filterTasks('done',this,'daily')">Done</button>
+          <button class="tab active" onclick="filterTasks('all',this,'daily')">📋 All</button>
+          <button class="tab" onclick="filterTasks('active',this,'daily')">🔥 Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'daily')">☑️ Done</button>
         </div>
         <input type="text" id="dailySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search daily..." oninput="searchFilter('daily')">
       </div>
@@ -215,7 +215,7 @@
             <option value="high">&#x1F534; High</option>
             <option value="low">&#x1F7E2; Low</option>
           </select>
-          <button class="add-btn" onclick="addTask('monthly')">+ Add</button>
+          <button class="add-btn" onclick="addTask('monthly')">➕ Add</button>
         </div>
       </div>
       <div class="progress-section">
@@ -227,9 +227,9 @@
       </div>
       <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
         <div class="tabs" style="margin-bottom:0;">
-          <button class="tab active" onclick="filterTasks('all',this,'monthly')">All</button>
-          <button class="tab" onclick="filterTasks('active',this,'monthly')">Active</button>
-          <button class="tab" onclick="filterTasks('done',this,'monthly')">Done</button>
+          <button class="tab active" onclick="filterTasks('all',this,'monthly')">📋 All</button>
+          <button class="tab" onclick="filterTasks('active',this,'monthly')">🔥 Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'monthly')">☑️ Done</button>
         </div>
         <input type="text" id="monthlySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search monthly..." oninput="searchFilter('monthly')">
       </div>
@@ -257,7 +257,7 @@
             <option value="high">&#x1F534; High</option>
             <option value="low">&#x1F7E2; Low</option>
           </select>
-          <button class="add-btn" onclick="addTask('yearly')">+ Add</button>
+          <button class="add-btn" onclick="addTask('yearly')">➕ Add</button>
         </div>
       </div>
       <div class="progress-section">
@@ -269,9 +269,9 @@
       </div>
       <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
         <div class="tabs" style="margin-bottom:0;">
-          <button class="tab active" onclick="filterTasks('all',this,'yearly')">All</button>
-          <button class="tab" onclick="filterTasks('active',this,'yearly')">Active</button>
-          <button class="tab" onclick="filterTasks('done',this,'yearly')">Done</button>
+          <button class="tab active" onclick="filterTasks('all',this,'yearly')">📋 All</button>
+          <button class="tab" onclick="filterTasks('active',this,'yearly')">🔥 Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'yearly')">☑️ Done</button>
         </div>
         <input type="text" id="yearlySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search yearly..." oninput="searchFilter('yearly')">
       </div>
@@ -357,7 +357,7 @@
             position: relative;
             overflow: hidden;
           ">
-          <span style="font-size:1.2rem"></span>
+          <span style="font-size:1.2rem">📊</span>
           <span style="flex:1">Most Frequent Tasks</span>
           <span style="
             background: rgba(124,106,255,0.2);
@@ -430,7 +430,7 @@
         <div class="chat-header-name">Todo AI Assistant</div>
         <div class="chat-header-status"><div class="chat-status-dot"></div> Online  Knows your data</div>
       </div>
-      <button class="chat-close-btn" onclick="toggleChatbot()"></button>
+      <button class="chat-close-btn" onclick="toggleChatbot()">❌</button>
     </div>
 
     <div class="chat-messages" id="chatMessages"></div>
@@ -448,7 +448,7 @@
     <div class="chat-input-row">
       <input class="chat-input" id="chatInput" type="text" placeholder="Ask me anything about your tasks" maxlength="200"
         onkeydown="if(event.key==='Enter') sendChat()">
-      <button class="chat-send-btn" onclick="sendChat()"></button>
+      <button class="chat-send-btn" onclick="sendChat()">🚀</button>
     </div>
   </div>
 
@@ -502,8 +502,8 @@
       <div class="avatar-picker-sub">Pick an anime spirit that represents you!</div>
       <div class="avatar-grid" id="avatarGrid"></div>
       <div class="avatar-picker-actions">
-        <button class="avatar-confirm-btn" onclick="confirmAvatar()">&#x2705; Set My Character</button>
-        <button class="avatar-skip-btn" id="avatarSkipBtn" onclick="skipAvatar()">Skip</button>
+        <button class="avatar-confirm-btn" onclick="confirmAvatar()">&#x2611; Set My Character</button>
+        <button class="avatar-skip-btn" id="avatarSkipBtn" onclick="skipAvatar()">⏭️ Skip</button>
       </div>
     </div>
   </div>

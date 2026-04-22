@@ -317,7 +317,7 @@
           <span class="todo-time">Click to add to Daily</span>
         </div>
       </div>
-      <button class="delete-btn" onclick="deleteSample(event,'${s.id}')"></button>
+      <button class="delete-btn" onclick="deleteSample(event,'${s.id}')">🗑️</button>
     </div>
   `).join('');
     }
@@ -468,7 +468,7 @@
 
       list.innerHTML = tasks.map((task, i) => `
     <div class="todo-item ${task.done ? 'done' : ''} p-${task.priority}" data-id="${task.id}" style="animation-delay:${i * 0.05}s">
-      <button class="check-btn" onclick="completeTask(${task.id},'${type}')">${task.done ? '' : ''}</button>
+      <button class="check-btn" onclick="completeTask(${task.id},'${type}')">${task.done ? '☑️' : '◻️'}</button>
       <div class="todo-content">
         <div class="todo-text">${escapeHtml(task.text)}</div>
         <div class="todo-meta">
