@@ -1,0 +1,16 @@
+{
+  "name": "Tamizh Todo Application",
+  "short_name": "Tamizh Todo",
+  "description": "A professional AI-assisted daily planner.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07070a",
+  "theme_color": "#5e43f3",
+  "icons": [
+    {
+      "src": "/transformer_logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}

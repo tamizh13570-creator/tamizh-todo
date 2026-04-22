@@ -1,0 +1,25 @@
+# render.yaml — Render Blueprint for Tamizh Todo App
+# This auto-configures the web service + PostgreSQL database on Render
+
+services:
+  - type: web
+    name: tamizh-todo
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tamizh-todo-db
+          property: connectionString
+
+databases:
+  - name: tamizh-todo-db
+    plan: free
+    databaseName: tamizhtodo
+    user: tamizh

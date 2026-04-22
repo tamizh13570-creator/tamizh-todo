@@ -3,9 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title> Tamizh Todo  Daily Planner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#5e43f3">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="transformer_logo.png">
+  <title>Tamizh Todo Application</title>
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="styles.css">
@@ -58,6 +60,9 @@
     <header>
       <div class="logo">Tamizh<span></span>Todo</div>
       <div class="header-right">
+        <button class="notif-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Light/Dark Mode" style="margin-right:15px;">
+          &#x1F319;
+        </button>
         <div class="date-display">
           <strong id="dateDisplay"></strong>
           <span id="timeDisplay"></span>
@@ -92,6 +97,12 @@
             <div class="pd-divider"></div>
             <button class="pd-btn" onclick="showAvatarPicker(false); document.getElementById('profileDropdown').classList.remove('open');">
               <span class="pd-btn-icon">&#x1F3AD;</span> Change Avatar
+            </button>
+            <button class="pd-btn" onclick="exportData()">
+              <span class="pd-btn-icon">&#x1F4BE;</span> Export Data
+            </button>
+            <button class="pd-btn pd-logout" onclick="confirmDeleteAccount()">
+              <span class="pd-btn-icon">&#x1F5D1;</span> Delete Account
             </button>
             <button class="pd-btn pd-logout" onclick="submitLogout()">
               <span class="pd-btn-icon">&#x1F6AA;</span> Log Out
@@ -172,10 +183,13 @@
           <div class="progress-fill daily" id="progressFill" style="width:0%"></div>
         </div>
       </div>
-      <div class="tabs" style="margin-bottom:14px;">
-        <button class="tab active" onclick="filterTasks('all',this,'daily')">All</button>
-        <button class="tab" onclick="filterTasks('active',this,'daily')">Active</button>
-        <button class="tab" onclick="filterTasks('done',this,'daily')">Done</button>
+      <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
+        <div class="tabs" style="margin-bottom:0;">
+          <button class="tab active" onclick="filterTasks('all',this,'daily')">All</button>
+          <button class="tab" onclick="filterTasks('active',this,'daily')">Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'daily')">Done</button>
+        </div>
+        <input type="text" id="dailySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search daily..." oninput="searchFilter('daily')">
       </div>
       <div class="todo-list" id="todoList"></div>
     </div>
@@ -211,10 +225,13 @@
           <div class="progress-fill monthly" id="monthlyProgressFill" style="width:0%"></div>
         </div>
       </div>
-      <div class="tabs" style="margin-bottom:14px;">
-        <button class="tab active" onclick="filterTasks('all',this,'monthly')">All</button>
-        <button class="tab" onclick="filterTasks('active',this,'monthly')">Active</button>
-        <button class="tab" onclick="filterTasks('done',this,'monthly')">Done</button>
+      <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
+        <div class="tabs" style="margin-bottom:0;">
+          <button class="tab active" onclick="filterTasks('all',this,'monthly')">All</button>
+          <button class="tab" onclick="filterTasks('active',this,'monthly')">Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'monthly')">Done</button>
+        </div>
+        <input type="text" id="monthlySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search monthly..." oninput="searchFilter('monthly')">
       </div>
       <div class="todo-list" id="monthlyList"></div>
     </div>
@@ -250,10 +267,13 @@
           <div class="progress-fill yearly" id="yearlyProgressFill" style="width:0%"></div>
         </div>
       </div>
-      <div class="tabs" style="margin-bottom:14px;">
-        <button class="tab active" onclick="filterTasks('all',this,'yearly')">All</button>
-        <button class="tab" onclick="filterTasks('active',this,'yearly')">Active</button>
-        <button class="tab" onclick="filterTasks('done',this,'yearly')">Done</button>
+      <div class="tabs-toolbar" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap: 10px; flex-wrap: wrap;">
+        <div class="tabs" style="margin-bottom:0;">
+          <button class="tab active" onclick="filterTasks('all',this,'yearly')">All</button>
+          <button class="tab" onclick="filterTasks('active',this,'yearly')">Active</button>
+          <button class="tab" onclick="filterTasks('done',this,'yearly')">Done</button>
+        </div>
+        <input type="text" id="yearlySearch" class="task-input search-input" style="padding:8px 12px; max-width:200px;" placeholder="&#x1F50D; Search yearly..." oninput="searchFilter('yearly')">
       </div>
       <div class="todo-list" id="yearlyList"></div>
     </div>
@@ -401,11 +421,11 @@
   <script src="script.js"></script>
 
   <!--  CHATBOT UI  -->
-  <button class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot()" title="AI Assistant"><img src="optimus.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></button>
+  <button class="chatbot-fab" id="chatbotFab" onclick="toggleChatbot()" title="AI Assistant"><img src="transformer_logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></button>
 
   <div class="chatbot-panel" id="chatbotPanel">
     <div class="chat-header">
-      <div class="chat-avatar"><img src="optimus.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></div>
+      <div class="chat-avatar"><img src="transformer_logo.png" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"></div>
       <div class="chat-header-info">
         <div class="chat-header-name">Todo AI Assistant</div>
         <div class="chat-header-status"><div class="chat-status-dot"></div> Online  Knows your data</div>

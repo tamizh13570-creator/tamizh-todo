@@ -1,4 +1,4 @@
-﻿// 
+// 
     //  INTRO ANIMATION PARTICLES
     // 
     (function () {
@@ -281,18 +281,18 @@
     //  SAMPLE TASKS
     // 
     const DEFAULT_SAMPLES = [
-      { id: 's1', text: ' Morning meditation (10 minutes)', priority: 'medium', category: 'wellness' },
-      { id: 's2', text: ' Drink 8 glasses of water', priority: 'high', category: 'health' },
-      { id: 's3', text: ' Read for 30 minutes', priority: 'medium', category: 'learning' },
-      { id: 's4', text: ' Exercise / walk for 20 minutes', priority: 'high', category: 'fitness' },
-      { id: 's5', text: ' Clear email inbox', priority: 'medium', category: 'work' },
-      { id: 's6', text: ' Clean & organise workspace', priority: 'low', category: 'home' },
-      { id: 's7', text: ' Call a friend or family member', priority: 'low', category: 'social' },
-      { id: 's8', text: ' Review and update weekly goals', priority: 'high', category: 'planning' },
-      { id: 's9', text: ' Sleep by 10:30 PM', priority: 'medium', category: 'wellness' },
-      { id: 's10', text: ' Eat at least 3 healthy meals', priority: 'medium', category: 'health' },
-      { id: 's11', text: ' Journal / write about your day', priority: 'low', category: 'mindfulness' },
-      { id: 's12', text: ' 1-hour phone-free focus time', priority: 'high', category: 'productivity' },
+      { id: 's1', text: ' Morning meditation (10 minutes)', priority: 'medium' },
+      { id: 's2', text: ' Drink 8 glasses of water', priority: 'high' },
+      { id: 's3', text: ' Read for 30 minutes', priority: 'medium' },
+      { id: 's4', text: ' Exercise / walk for 20 minutes', priority: 'high' },
+      { id: 's5', text: ' Clear email inbox', priority: 'medium' },
+      { id: 's6', text: ' Clean & organise workspace', priority: 'low' },
+      { id: 's7', text: ' Call a friend or family member', priority: 'low' },
+      { id: 's8', text: ' Review and update weekly goals', priority: 'high' },
+      { id: 's9', text: ' Sleep by 10:30 PM', priority: 'medium' },
+      { id: 's10', text: ' Eat at least 3 healthy meals', priority: 'medium' },
+      { id: 's11', text: ' Journal / write about your day', priority: 'low' },
+      { id: 's12', text: ' 1-hour phone-free focus time', priority: 'high' },
     ];
 
     function getSamples() {
@@ -365,10 +365,13 @@
     function addTask(type) {
       const inputId = { daily: 'taskInput', monthly: 'monthlyInput', yearly: 'yearlyInput' }[type];
       const selectId = { daily: 'prioritySelect', monthly: 'monthlyPriority', yearly: 'yearlyPriority' }[type];
+      
       const input = document.getElementById(inputId);
       const text = input.value.trim();
       if (!text) { input.focus(); input.style.borderColor = 'var(--accent2)'; setTimeout(() => input.style.borderColor = '', 1000); return; }
+      
       const priority = document.getElementById(selectId).value;
+      
       const task = { id: Date.now(), text, priority, done: false, createdAt: new Date().toISOString() };
 
       if (type === 'daily') { getTodayRecord().tasks.push(task); }
@@ -443,6 +446,13 @@
       if (filter === 'active') tasks = tasks.filter(t => !t.done);
       if (filter === 'done') tasks = tasks.filter(t => t.done);
 
+      const searchInputId = { daily: 'dailySearch', monthly: 'monthlySearch', yearly: 'yearlySearch' }[type];
+      const searchBox = document.getElementById(searchInputId);
+      if (searchBox && searchBox.value) {
+        const q = searchBox.value.toLowerCase();
+        tasks = tasks.filter(t => t.text.toLowerCase().includes(q));
+      }
+
       if (!tasks.length) {
         const empties = {
           daily: { icon: filter === 'done' ? '' : '', msg: filter === 'done' ? 'No completed tasks yet. Get going!' : 'No tasks yet. Add your first task above!' },
@@ -466,7 +476,7 @@
           <span class="todo-time">${new Date(task.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
       </div>
-      <button class="delete-btn" onclick="deleteTask(${task.id},'${type}')"></button>
+      <button class="delete-btn" onclick="deleteTask(${task.id},'${type}')">&#x1F5D1;</button>
     </div>
   `).join('');
 
@@ -495,6 +505,10 @@
       const sectionId = { daily: 'section-tasks', monthly: 'section-monthly', yearly: 'section-yearly' }[type];
       document.querySelectorAll(`#${sectionId} .tabs .tab`).forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
+      renderTasks(type);
+    }
+
+    function searchFilter(type) {
       renderTasks(type);
     }
 
@@ -916,7 +930,7 @@
       const div = document.createElement('div');
       div.className = `chat-msg ${role}`;
       div.innerHTML = `
-        <div class="chat-msg-avatar">${isUser ? '' : '<img src="optimus.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">'}</div>
+        <div class="chat-msg-avatar">${isUser ? '' : '<img src="transformer_logo.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;">'}</div>
         <div>
           <div class="chat-bubble">${html}</div>
           <div class="chat-time">${now}</div>
@@ -929,7 +943,7 @@
       const msgs = document.getElementById('chatMessages');
       const el = document.createElement('div');
       el.className = 'chat-msg bot'; el.id = 'typingIndicator';
-      el.innerHTML = `<div class="chat-msg-avatar"><img src="optimus.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;"></div>
+      el.innerHTML = `<div class="chat-msg-avatar"><img src="transformer_logo.png" style="width:22px;height:22px;border-radius:50%;object-fit:cover;"></div>
         <div class="typing-indicator">
           <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
         </div>`;
@@ -1235,9 +1249,21 @@ function toggleProfileDropdown() {
 function showAvatarPicker(mandatory) {
   userAvatar = localStorage.getItem('tamizh_todo_avatar') || '';
   selectedAvatarEmoji = userAvatar;
+  var hasAvatar = !!userAvatar;
 
   var overlay = document.getElementById('avatarPickerOverlay');
   if (!overlay) return;
+
+  // Update title based on context
+  var titleEl = overlay.querySelector('.avatar-picker-title');
+  var subEl   = overlay.querySelector('.avatar-picker-sub');
+  if (hasAvatar) {
+    if (titleEl) titleEl.innerHTML = '\u270F\uFE0F Change Your Avatar';
+    if (subEl)   subEl.textContent = 'Choose a new emoji that represents you!';
+  } else {
+    if (titleEl) titleEl.innerHTML = '\u2728 Choose Your Character';
+    if (subEl)   subEl.textContent = 'Pick an emoji spirit that represents you!';
+  }
 
   // Build grid
   var grid = document.getElementById('avatarGrid');
@@ -1255,25 +1281,29 @@ function showAvatarPicker(mandatory) {
     grid.appendChild(div);
   });
 
-  // Hide skip button if mandatory (first login)
-  document.getElementById('avatarSkipBtn').style.display = mandatory ? 'none' : 'inline-block';
+  // Show skip only on first-time setup (no avatar yet)
+  var skipBtn = document.getElementById('avatarSkipBtn');
+  if (skipBtn) skipBtn.style.display = (!hasAvatar && !mandatory) ? 'inline-block' : 'none';
 
   overlay.classList.add('show');
 }
 
 function confirmAvatar() {
-  if (!selectedAvatarEmoji) return showToast('Pick a character first!');
+  if (!selectedAvatarEmoji) return showToast('Pick a character first! \uD83D\uDC46');
   localStorage.setItem('tamizh_todo_avatar', selectedAvatarEmoji);
+  localStorage.setItem('tamizh_todo_avatar_set', '1'); // mark as permanently set
   userAvatar = selectedAvatarEmoji;
   setUserBtn(authUsername);
   document.getElementById('avatarPickerOverlay').classList.remove('show');
   spawnConfetti();
-  showToast('Avatar set! Looking great, ' + authUsername + '!');
+  showToast('\uD83C\uDF89 Avatar set! Looking great, ' + (authUsername || 'friend') + '!');
 }
 
 function skipAvatar() {
+  // Only reachable on first-time setup; assign default ninja
   if (!localStorage.getItem('tamizh_todo_avatar')) {
-    localStorage.setItem('tamizh_todo_avatar', '\uD83E\uDD77'); // default: ninja
+    localStorage.setItem('tamizh_todo_avatar', '\uD83E\uDD77');
+    localStorage.setItem('tamizh_todo_avatar_set', '1');
     userAvatar = '\uD83E\uDD77';
     setUserBtn(authUsername);
   }
@@ -1327,18 +1357,19 @@ function togglePw(inputId, btn) {
 }
 
 // ---- API helper ----------------------------------------
-async function apiRequest(endpoint, body) {
+async function apiRequest(endpoint, body, method) {
   try {
     var headers = { 'Content-Type': 'application/json' };
     if (authToken) headers['Authorization'] = 'Bearer ' + authToken;
 
     var API_BASE = (window.location.origin.includes('localhost') ||
                     window.location.protocol === 'file:')
-                   ? 'http://localhost:3000'
+                   ? 'http://localhost:4000'
                    : window.location.origin;
 
+    var fetchMethod = method || (body ? 'POST' : 'GET');
     var res  = await fetch(API_BASE + endpoint, {
-      method:  body ? 'POST' : 'GET',
+      method:  fetchMethod,
       headers: headers,
       body:    body ? JSON.stringify(body) : undefined
     });
@@ -1348,6 +1379,35 @@ async function apiRequest(endpoint, body) {
   } catch (err) {
     showToast('Error: ' + err.message);
     throw err;
+  }
+}
+
+// ---- Export Data ----------------------------------------
+function exportData() {
+  if (!appData) return showToast('No data to export.');
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "tamizh_todo_export.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+  showToast('Data exported successfully!');
+  document.getElementById('profileDropdown').classList.remove('open');
+}
+
+// ---- Delete Account -------------------------------------
+async function confirmDeleteAccount() {
+  if (!confirm("\u26A0\uFE0F DANGER ZONE \u26A0\uFE0F\n\nAre you absolutely sure you want to permanently delete your account and all your data? This action CANNOT be undone.")) {
+    return;
+  }
+  
+  try {
+    var res = await apiRequest('/api/auth/delete', null, 'DELETE');
+    showToast('Account permanently deleted.');
+    submitLogout();
+  } catch (e) {
+    alert("Failed to delete account. Please try again later.");
   }
 }
 
@@ -1369,12 +1429,17 @@ async function submitRegister(e) {
     applyLoginGate();
     toggleAuthModal();
     fetchDataFromCloud();
-    showToast('Welcome, ' + authUsername + '! Now pick your character!');
-    // Show avatar picker (mandatory on first register)
-    setTimeout(function() { showAvatarPicker(true); }, 400);
+    // Only show avatar picker if user hasn't set one before on this browser
+    var alreadyHasAvatar = !!localStorage.getItem('tamizh_todo_avatar_set');
+    if (!alreadyHasAvatar) {
+      showToast('Welcome ' + authUsername + '! Now pick your character!');
+      setTimeout(function() { showAvatarPicker(true); }, 400);
+    } else {
+      showToast('Account created! Welcome, ' + authUsername + '!');
+    }
   } catch (e) {
     if (e.message && e.message.includes('already taken')) {
-      alert("âš ï¸ This username is already taken by another user! Please choose a different username.");
+      alert("\u26A0\uFE0F This username is already taken by another user! Please choose a different username.");
       document.getElementById('regUsername').focus(); // Select the box for them
     }
   }
@@ -1416,10 +1481,10 @@ function submitLogout() {
   authUsername = null;
   localStorage.removeItem('tamizh_todo_token');
   localStorage.removeItem('tamizh_todo_username');
-  localStorage.removeItem('tamizh_todo_avatar');
+  // Keep avatar & avatar_set so it persists if they log back in on the same browser
   setUserBtn(null);
   document.getElementById('profileDropdown').classList.remove('open');
-  showToast('Logged out successfully.');
+  showToast('\uD83D\uDEAA Logged out successfully.');
   applyLoginGate();
   setTimeout(function() { toggleAuthModal(true); }, 400);
 }
@@ -1474,8 +1539,26 @@ function applyLoginGate() {
     if (chatPanel) chatPanel.style.display = '';
   }
 }
+// ---- Theme Toggle ---------------------------------------
+function toggleTheme() {
+  const isLight = document.body.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.body.removeAttribute('data-theme');
+    localStorage.setItem('tamizh_todo_theme', 'dark');
+    document.getElementById('themeToggleBtn').innerHTML = '&#x1F319;'; 
+  } else {
+    document.body.setAttribute('data-theme', 'light');
+    localStorage.setItem('tamizh_todo_theme', 'light');
+    document.getElementById('themeToggleBtn').innerHTML = '&#x2600;&#xFE0F;'; 
+  }
+}
 
 // ---- Init -----------------------------------------------
+if (localStorage.getItem('tamizh_todo_theme') === 'light') {
+  document.body.setAttribute('data-theme', 'light');
+  const themeBtn = document.getElementById('themeToggleBtn');
+  if (themeBtn) themeBtn.innerHTML = '&#x2600;&#xFE0F;';
+}
 if (authToken) {
   setUserBtn(authUsername);
   fetchDataFromCloud();
@@ -1488,6 +1571,17 @@ setTimeout(function() {
     toggleAuthModal(true);
   }
 }, 4000);
+
+// ---- Register PWA Service Worker -------------------------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('SW registered successfully.');
+    }).catch(function(err) {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
 
 
 
