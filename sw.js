@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tamizh-todo-v2';
+const CACHE_NAME = 'tamizh-todo-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
