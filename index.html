@@ -133,9 +133,16 @@
         <div class="stat-num" id="statStreak">0</div>
         <div class="stat-label">Day Streak </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num" id="statRate">0%</div>
-        <div class="stat-label">Success Rate</div>
+      <div class="stat-card stat-card-split">
+        <div class="stat-split-top">
+          <div class="stat-num" id="statRate" style="font-size:1.45rem">0%</div>
+          <div class="stat-label">Today's Rate</div>
+        </div>
+        <div class="stat-split-divider"></div>
+        <div class="stat-split-bottom">
+          <div class="stat-num stat-num-sm" id="statDailyAvg">0%</div>
+          <div class="stat-label">Daily Avg 📈</div>
+        </div>
       </div>
     </div>
 
@@ -148,6 +155,7 @@
       <button class="tab" onclick="switchTab('graph',this)">&#x1F4CA; Graph</button>
       <button class="tab" onclick="switchTab('data',this)">&#x1F5C2; All Data</button>
       <button class="tab" onclick="switchTab('year',this)">&#x1F30D; Year View</button>
+      <button class="tab" id="pendingTabBtn" onclick="switchTab('pending',this)">&#x1F534; Pending</button>
     </div>
 
     <!--  DAILY TASKS  -->
@@ -400,6 +408,42 @@
       </div>
       <div class="section-header" style="font-size:0.9rem;margin-bottom:10px;"> Activity Heatmap</div>
       <div class="year-grid" id="yearGrid"></div>
+    </div>
+
+    <!--  PENDING TASKS  -->
+    <div class="section" id="section-pending">
+      <div class="section-header">&#x1F534; Pending Tasks <span class="section-badge" id="pendingBadge">0</span></div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:18px;">All incomplete tasks across Daily, Monthly &amp; Yearly — complete them from their own tabs.</div>
+
+      <!-- Daily pending -->
+      <div class="pending-group" id="pendingGroupDaily">
+        <div class="pending-group-header">
+          <span class="pending-group-icon">&#x1F4CB;</span>
+          <span class="pending-group-title">Daily Tasks</span>
+          <span class="pending-group-count" id="pendingCountDaily">0</span>
+        </div>
+        <div class="pending-list" id="pendingListDaily"></div>
+      </div>
+
+      <!-- Monthly pending -->
+      <div class="pending-group" id="pendingGroupMonthly">
+        <div class="pending-group-header">
+          <span class="pending-group-icon">&#x1F4C5;</span>
+          <span class="pending-group-title">Monthly Goals</span>
+          <span class="pending-group-count" id="pendingCountMonthly">0</span>
+        </div>
+        <div class="pending-list" id="pendingListMonthly"></div>
+      </div>
+
+      <!-- Yearly pending -->
+      <div class="pending-group" id="pendingGroupYearly">
+        <div class="pending-group-header">
+          <span class="pending-group-icon">&#x1F5D3;</span>
+          <span class="pending-group-title">Yearly Aspirations</span>
+          <span class="pending-group-count" id="pendingCountYearly">0</span>
+        </div>
+        <div class="pending-list" id="pendingListYearly"></div>
+      </div>
     </div>
 
     <div style="height:40px;"></div>

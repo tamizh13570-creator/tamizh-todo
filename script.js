@@ -530,6 +530,30 @@
       document.getElementById('statStreak').textContent = calcStreak();
       document.getElementById('progressFill').style.width = rate + '%';
       document.getElementById('progressLabel').textContent = `${done} / ${total} tasks`;
+      // Daily average success rate across all recorded days
+      const avgEl = document.getElementById('statDailyAvg');
+      if (avgEl) avgEl.textContent = calcDailyAvg() + '%';
+      // Keep pending badge in sync
+      const pendingBadge = document.getElementById('pendingBadge');
+      if (pendingBadge) {
+        const dp = getTodayRecord().tasks.filter(t => !t.done).length;
+        const mp = getMonthRecord().tasks.filter(t => !t.done).length;
+        const yp = getYearRecord().tasks.filter(t => !t.done).length;
+        pendingBadge.textContent = dp + mp + yp;
+      }
+    }
+
+    function calcDailyAvg() {
+      const days = Object.keys(appData.days);
+      const activeDays = days.filter(k => appData.days[k].tasks.length > 0);
+      if (!activeDays.length) return 0;
+      const totalRate = activeDays.reduce((sum, k) => {
+        const rec = appData.days[k];
+        const t = rec.tasks.length;
+        const d = rec.tasks.filter(t => t.done).length;
+        return sum + (t > 0 ? d / t : 0);
+      }, 0);
+      return Math.round((totalRate / activeDays.length) * 100);
     }
 
     function calcStreak() {
@@ -840,6 +864,43 @@
     }
 
     // 
+    //  PENDING TASKS
+    // 
+    function renderPending() {
+      const dailyTasks   = getTodayRecord().tasks.filter(t => !t.done);
+      const monthlyTasks = getMonthRecord().tasks.filter(t => !t.done);
+      const yearlyTasks  = getYearRecord().tasks.filter(t => !t.done);
+      const total = dailyTasks.length + monthlyTasks.length + yearlyTasks.length;
+
+      // Update badge on tab
+      const badge = document.getElementById('pendingBadge');
+      if (badge) badge.textContent = total;
+
+      function buildItems(tasks, type, emptyMsg) {
+        if (!tasks.length) return `<div class="pending-empty">${emptyMsg}</div>`;
+        return tasks.map((t, i) => `
+          <div class="pending-item p-${t.priority}" style="animation-delay:${i*0.05}s">
+            <span class="pending-priority-dot priority-dot-${t.priority}"></span>
+            <div class="pending-item-text">${escapeHtml(t.text)}</div>
+            <span class="priority-badge badge-${t.priority}">${t.priority}</span>
+          </div>`).join('');
+      }
+
+      document.getElementById('pendingCountDaily').textContent   = dailyTasks.length;
+      document.getElementById('pendingCountMonthly').textContent = monthlyTasks.length;
+      document.getElementById('pendingCountYearly').textContent  = yearlyTasks.length;
+
+      document.getElementById('pendingListDaily').innerHTML   = buildItems(dailyTasks,   'daily',   '✅ All daily tasks are done!');
+      document.getElementById('pendingListMonthly').innerHTML = buildItems(monthlyTasks, 'monthly', '✅ All monthly goals are done!');
+      document.getElementById('pendingListYearly').innerHTML  = buildItems(yearlyTasks,  'yearly',  '✅ All yearly aspirations are done!');
+
+      // Hide groups with 0 items (collapse them visually)
+      document.getElementById('pendingGroupDaily').style.opacity   = dailyTasks.length   ? '1' : '0.45';
+      document.getElementById('pendingGroupMonthly').style.opacity = monthlyTasks.length ? '1' : '0.45';
+      document.getElementById('pendingGroupYearly').style.opacity  = yearlyTasks.length  ? '1' : '0.45';
+    }
+
+    // 
     //  TAB SWITCHING
     // 
     function switchTab(tab, btn) {
@@ -853,6 +914,7 @@
       if (tab === 'samples') renderSamples();
       if (tab === 'monthly') renderTasks('monthly');
       if (tab === 'yearly') renderTasks('yearly');
+      if (tab === 'pending') renderPending();
       updatePeriodMeta();
     }
 

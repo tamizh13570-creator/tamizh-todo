@@ -2787,3 +2787,132 @@
   outline: none;
 }
 
+
+    /* Split stat card (Today's Rate + Daily Avg) */
+    .stat-card-split {
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0;
+    }
+    .stat-split-top,
+    .stat-split-bottom {
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .stat-split-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 5px 0;
+      width: 100%;
+      opacity: 0.7;
+    }
+    .stat-num-sm {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 3px;
+      color: var(--accent3);
+    }
+
+    /* === PENDING SECTION === */
+    .pending-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: opacity 0.3s;
+    }
+
+    .pending-group-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, rgba(124,106,255,0.08), rgba(255,106,155,0.05));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pending-group-icon {
+      font-size: 1.2rem;
+    }
+
+    .pending-group-title {
+      flex: 1;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .pending-group-count {
+      background: var(--accent2);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      border-radius: 20px;
+      padding: 3px 10px;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .pending-list {
+      padding: 10px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .pending-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      animation: itemEnter 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .pending-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 14px rgba(124,106,255,0.1);
+    }
+
+    .pending-item.p-high  { border-left: 3px solid var(--accent2); }
+    .pending-item.p-medium { border-left: 3px solid var(--accent4); }
+    .pending-item.p-low   { border-left: 3px solid var(--accent3); }
+
+    .pending-priority-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .priority-dot-high   { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); }
+    .priority-dot-medium { background: var(--accent4); box-shadow: 0 0 6px var(--accent4); }
+    .priority-dot-low    { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+
+    .pending-item-text {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .pending-empty {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--accent3);
+      padding: 14px 0 6px;
+      font-weight: 600;
+    }
